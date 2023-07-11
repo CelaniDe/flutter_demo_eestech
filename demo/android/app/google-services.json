@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "338936417668",
+    "project_id": "eestech-final",
+    "storage_bucket": "eestech-final.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338936417668:android:bc043a75c6ab52c0a1a1d1",
+        "android_client_info": {
+          "package_name": "com.example.demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338936417668-8c6pl7lcoi9ag3al1r9srjn2mqhrf1l0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCY4-7S3X95-rYhsIeLaMDoqRtYtZx8-QI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338936417668-8c6pl7lcoi9ag3al1r9srjn2mqhrf1l0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
