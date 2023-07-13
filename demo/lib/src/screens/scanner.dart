@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:barcode_scan/barcode_scan.dart';
+import 'package:barcode_scan2/barcode_scan2.dart' as scanner;
 import 'package:flutter/services.dart';
 
 class Scanner extends StatefulWidget {
@@ -10,12 +10,12 @@ class Scanner extends StatefulWidget {
 class _ScannerState extends State<Scanner> {
   Future<void> scanBarcode() async {
     try {
-      String barcode = await BarcodeScanner.scan();
+      final barcodeScanRes = await scanner.BarcodeScanner.scan();
 
       // Do something with the scanned barcode value
-      print('Scanned barcode: $barcode');
+      print('Scanned barcode: ${barcodeScanRes.rawContent}');
     } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) {
+      if (e.code == scanner.BarcodeScanner.cameraAccessDenied) {
         print('Camera permission denied');
       } else {
         print('Error: $e');
