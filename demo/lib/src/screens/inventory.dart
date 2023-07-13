@@ -82,9 +82,14 @@ class _inventoryState extends State<inventory> {
       print(products.docs.map((e) {
         lista.add(Product(e.data()['name'], DateTime(2000)));
       }));
-      setState(() {
-        productList = lista;
-      });
+    try {
+        setState(() {
+          productList = lista;
+        });
+      }
+    catch (e) {
+      print(e);
+    }
     }
   }
 
