@@ -1,8 +1,14 @@
 import 'package:demo/auth.dart';
+import 'package:demo/src/screens/home.dart';
+import 'package:demo/src/screens/inventory.dart';
+import 'package:demo/src/screens/settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
+import 'package:demo/coinfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -14,9 +20,57 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final User? user = Auth().currentUSer;
 
-  Future<void> signOut() async {
-    await Auth().signOut();
+  int coinCount = 0;
+  final DatabaseReference coinsRef =
+    FirebaseDatabase.instance.reference().child('coins');
+    
+  var _currentIndex = 0;
+
+    final List<Widget> _pages = [
+    inventory(),
+    home(),
+    home(),
+    settings(),
+  ];
+
+
+
+
+Future<int> fetchUserCoins() async {
+  int userCoins = 0;
+
+  if (user != null) {
+    
+
+    DocumentSnapshot documentSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
+    print(user!.uid);
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic>? data = documentSnapshot.data() as Map<String, dynamic>?;
+      if (data != null) {
+        userCoins = data['coins'] ?? 0;
+      }
+    }
   }
+
+  return userCoins;
+}
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserCoins().then((userCoins) {
+      setState(() {
+        coinCount = userCoins;
+      });
+    });
+  }
+
+  Widget _coinCount() {
+    return Text('$coinCount');
+  }
+
 
   Widget _title() {
     return const Text('Firebase Auth');
@@ -26,15 +80,20 @@ class _HomePageState extends State<HomePage> {
     return Text(user?.email ?? 'User email');
   }
 
-  Widget _signOutButton() {
-    return ElevatedButton(onPressed: signOut, child: const Text('Sign out'));
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _title(),
+          title: Row(
+          children: <Widget>[
+            _title(),
+            Spacer(),
+            CoinField(coinImagePath: 'assets/coin.png', coinCount: coinCount),
+          ],
+        )
+
       ),
       body: Container(
         height: double.infinity,
@@ -43,9 +102,46 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[_userUid(), _signOutButton()],
-        ),
+          children: <Widget>[
+            _pages[_currentIndex],
+          ],
+        )
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Container(
+              width: 30,
+              height: 30,
+              child: Image.asset('assets/inventory.png'),
+            ),
+            label: 'Page 1',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Page 2',
+          ),
+          
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'settings',
+          ),
+          
+        ],
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black.withOpacity(0.5),
+      )
     );
   }
 }
