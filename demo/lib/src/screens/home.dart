@@ -8,6 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+var badgesFolder = 'assets/badges/';
+List<String> childrenData = [
+  badgesFolder + '1.png',
+  badgesFolder + '2.png',
+  badgesFolder + '3.png',
+  badgesFolder + '4.png',
+];
+
 class home extends StatefulWidget {
   const home({Key? key}) : super(key: key);
 
@@ -17,6 +25,7 @@ class home extends StatefulWidget {
 
 class _homeState extends State<home> {
   final User? user = Auth().currentUSer;
+  int currentProgress = 0;
 
   Future<void> signOut() async {
     await Auth().signOut();
@@ -30,29 +39,17 @@ class _homeState extends State<home> {
     return Text(user?.email ?? 'User email');
   }
 
-  var badgesFolder = 'assets/badges/';
-
   List<Widget> widgetList = [];
 
-  @override
-  void initState() {
-    super.initState();
+  int startingValue = 5;
 
-    List<String> childrenData = [
-      badgesFolder + '1.png',
-      badgesFolder + '2.png',
-      badgesFolder + '3.png',
-      badgesFolder + '4.png',
-    ];
-
-    int startingValue = 5;
-
+  void updateToolTipText() {
     widgetList = childrenData
         .asMap()
         .map((index, assetPath) {
           final imageName = assetPath.split('/').last.replaceAll('.png', '');
-          final tooltipMessage =
-              'You have accomplished ${startingValue + (index * 5)} tasks!';
+          String tooltipMessage =
+              'You need ${(startingValue + (index * 5)) - currentProgress} tasks to earn that badge!';
 
           return MapEntry(
             index,
@@ -75,6 +72,19 @@ class _homeState extends State<home> {
         })
         .values
         .toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateToolTipText();
+  }
+
+  void incrementX() {
+    setState(() {
+      currentProgress++;
+      updateToolTipText();
+    });
   }
 
   @override
@@ -104,6 +114,10 @@ class _homeState extends State<home> {
             );
           },
           child: Text('Scan Barcode'),
+        ),
+        ElevatedButton(
+          onPressed: incrementX,
+          child: Text('Complete task'),
         ),
         Padding(
           padding: EdgeInsets.only(top: 20),
