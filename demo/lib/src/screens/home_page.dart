@@ -1,4 +1,5 @@
 import 'package:demo/auth.dart';
+import 'package:demo/src/screens/achievements.dart';
 import 'package:demo/src/screens/home.dart';
 import 'package:demo/src/screens/inventory.dart';
 import 'package:demo/src/screens/settings.dart';
@@ -8,7 +9,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
 import 'package:demo/coinfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -22,40 +22,38 @@ class _HomePageState extends State<HomePage> {
 
   int coinCount = 0;
   final DatabaseReference coinsRef =
-    FirebaseDatabase.instance.reference().child('coins');
-    
+      FirebaseDatabase.instance.reference().child('coins');
+
   var _currentIndex = 0;
 
-    final List<Widget> _pages = [
+  final List<Widget> _pages = [
     inventory(),
     home(),
-    home(),
+    achievements(),
     settings(),
   ];
 
+  Future<int> fetchUserCoins() async {
+    int userCoins = 0;
 
+    if (user != null) {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+      print(user!.uid);
 
-
-Future<int> fetchUserCoins() async {
-  int userCoins = 0;
-
-  if (user != null) {
-    
-
-    DocumentSnapshot documentSnapshot =
-        await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
-    print(user!.uid);
-
-    if (documentSnapshot.exists) {
-      Map<String, dynamic>? data = documentSnapshot.data() as Map<String, dynamic>?;
-      if (data != null) {
-        userCoins = data['coins'] ?? 0;
+      if (documentSnapshot.exists) {
+        Map<String, dynamic>? data =
+            documentSnapshot.data() as Map<String, dynamic>?;
+        if (data != null) {
+          userCoins = data['coins'] ?? 0;
+        }
       }
     }
-  }
 
-  return userCoins;
-}
+    return userCoins;
+  }
 
   @override
   void initState() {
@@ -71,7 +69,6 @@ Future<int> fetchUserCoins() async {
     return Text('$coinCount');
   }
 
-
   Widget _title() {
     return const Text('Firebase Auth');
   }
@@ -80,68 +77,59 @@ Future<int> fetchUserCoins() async {
     return Text(user?.email ?? 'User email');
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Row(
+        appBar: AppBar(
+            title: Row(
           children: <Widget>[
             _title(),
             Spacer(),
             CoinField(coinImagePath: 'assets/coin.png', coinCount: coinCount),
           ],
-        )
-
-      ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            _pages[_currentIndex],
-          ],
-        )
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Container(
-              width: 30,
-              height: 30,
-              child: Image.asset('assets/inventory.png'),
+        )),
+        body: Container(
+            height: double.infinity,
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                _pages[_currentIndex],
+              ],
+            )),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (int index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Container(
+                width: 30,
+                height: 30,
+                child: Image.asset('assets/inventory.png'),
+              ),
+              label: 'Page 1',
             ),
-            label: 'Page 1',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Page 2',
-          ),
-          
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'settings',
-          ),
-          
-        ],
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.black.withOpacity(0.5),
-      )
-    );
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Achievements',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'settings',
+            ),
+          ],
+          selectedItemColor: Colors.black,
+          unselectedItemColor: Colors.black.withOpacity(0.5),
+        ));
   }
 }

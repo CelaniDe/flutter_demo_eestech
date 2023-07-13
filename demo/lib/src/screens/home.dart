@@ -38,30 +38,44 @@ class _homeState extends State<home> {
   void initState() {
     super.initState();
 
+    List<String> childrenData = [
+      badgesFolder + '1.png',
+      badgesFolder + '2.png',
+      badgesFolder + '3.png',
+      badgesFolder + '4.png',
+    ];
 
-  List<String> childrenData = [
-    badgesFolder + '1.png',
-    badgesFolder + '2.png',
-    badgesFolder + '3.png',
-    badgesFolder + '4.png',
-  ];
+    int startingValue = 5;
 
-    widgetList = childrenData.map((assetPath) {
-      return Container(
-        width: 50,
-        height: 50,
-        margin: EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          // color: Colors.green,
-          image: DecorationImage(
-            image: AssetImage(assetPath),
-            fit: BoxFit.cover,
-          ),
-        ),
-      );
-    }).toList();
-}
+    widgetList = childrenData
+        .asMap()
+        .map((index, assetPath) {
+          final imageName = assetPath.split('/').last.replaceAll('.png', '');
+          final tooltipMessage =
+              'You have accomplished ${startingValue + (index * 5)} tasks!';
+
+          return MapEntry(
+            index,
+            Tooltip(
+              message: tooltipMessage,
+              child: Container(
+                width: 50,
+                height: 50,
+                margin: EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: AssetImage(assetPath),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          );
+        })
+        .values
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,11 +118,38 @@ class _homeState extends State<home> {
           padding: EdgeInsets.only(top: 20),
           child: Container(
             width: 450,
-            height: 400,
+            height: 200,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
                 image: Image.asset('assets/park.png').image,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+            padding: EdgeInsets.only(top: 20, left: 100),
+            child: Container(
+              color: Colors.lightBlue,
+              child: Text(
+                'Welcome! My name is Maou and \ntogether we will learn about food waste',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            )),
+        Padding(
+          padding: EdgeInsets.only(top: 20),
+          child: Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                image: Image.asset('assets/pou_img.png').image,
                 fit: BoxFit.cover,
               ),
             ),
