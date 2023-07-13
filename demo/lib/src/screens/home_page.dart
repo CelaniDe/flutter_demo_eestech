@@ -113,14 +113,18 @@ class _HomePageState extends State<HomePage> {
                 height: 30,
                 child: Image.asset('assets/inventory.png'),
               ),
-              label: 'Page 1',
+              label: 'Inventory',
             ),
             const BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
             ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+            BottomNavigationBarItem(
+              icon: Container(
+                width: 30,
+                height: 30,
+                child: Image.asset('assets/award.png'),
+              ),
               label: 'Achievements',
             ),
             const BottomNavigationBarItem(
