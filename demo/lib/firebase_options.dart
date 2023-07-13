@@ -51,6 +51,7 @@ class DefaultFirebaseOptions {
     authDomain: 'eestech-final.firebaseapp.com',
     storageBucket: 'eestech-final.appspot.com',
     measurementId: 'G-BT8HDX5MDN',
+    databaseURL: "https://eestech-final.firebaseio.com",
   );
 
   static const FirebaseOptions android = FirebaseOptions(
