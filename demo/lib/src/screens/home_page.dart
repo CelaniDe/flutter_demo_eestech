@@ -1,5 +1,6 @@
 import 'package:demo/auth.dart';
 import 'package:demo/src/screens/home.dart';
+import 'package:demo/src/screens/inventory.dart';
 import 'package:demo/src/screens/settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   var _currentIndex = 0;
 
     final List<Widget> _pages = [
-    home(),
+    inventory(),
     home(),
     home(),
     settings(),
