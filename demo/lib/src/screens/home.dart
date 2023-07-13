@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:demo/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class home extends StatefulWidget {
@@ -26,7 +30,8 @@ class _homeState extends State<home> {
     return Text(user?.email ?? 'User email');
   }
 
-  List<String> childrenData = ['Child 1', 'Child 2', 'Child 3', 'Child 1', 'Child 2', 'Child 3', 'Child 1', 'Child 2', 'Child 3'];
+  var badgesFolder = 'assets/badges/';
+
   List<Widget> widgetList = [];
 
 
@@ -35,19 +40,30 @@ class _homeState extends State<home> {
   void initState() {
     super.initState();
 
-    widgetList = childrenData.map((data) {
+
+  List<String> childrenData = [
+    badgesFolder + '1.png',
+    badgesFolder + '2.png',
+    badgesFolder + '3.png',
+    badgesFolder + '4.png',
+  ];
+
+    widgetList = childrenData.map((assetPath) {
       return Container(
-        width: 80,
-        height: 80,
+        width: 50,
+        height: 50,
         margin: EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Colors.green,
+          // color: Colors.green,
+          image: DecorationImage(
+            image: AssetImage(assetPath),
+            fit: BoxFit.cover,
+          ),
         ),
-        child: Text(data),
       );
     }).toList();
-  }
+}
 
 
 
