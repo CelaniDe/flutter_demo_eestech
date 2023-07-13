@@ -1,4 +1,6 @@
 import 'package:demo/auth.dart';
+import 'package:demo/src/screens/home.dart';
+import 'package:demo/src/screens/settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -20,6 +22,15 @@ class _HomePageState extends State<HomePage> {
   int coinCount = 0;
   final DatabaseReference coinsRef =
     FirebaseDatabase.instance.reference().child('coins');
+    
+  var _currentIndex = 0;
+
+    final List<Widget> _pages = [
+    home(),
+    home(),
+    home(),
+    settings(),
+  ];
 
 
 
@@ -59,9 +70,6 @@ Future<int> fetchUserCoins() async {
     return Text('$coinCount');
   }
 
-  Future<void> signOut() async {
-    await Auth().signOut();
-  }
 
   Widget _title() {
     return const Text('Firebase Auth');
@@ -71,9 +79,7 @@ Future<int> fetchUserCoins() async {
     return Text(user?.email ?? 'User email');
   }
 
-  Widget _signOutButton() {
-    return ElevatedButton(onPressed: signOut, child: const Text('Sign out'));
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -95,61 +101,46 @@ Future<int> fetchUserCoins() async {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[_userUid(), _signOutButton(),
-            Container(
-              width: 450,
-              height: 400,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: Image.asset('assets/park.png').image,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            
-
+          children: <Widget>[
+            _pages[_currentIndex],
           ],
+        )
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Container(
+              width: 30,
+              height: 30,
+              child: Image.asset('assets/inventory.png'),
+            ),
+            label: 'Page 1',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
 
-        ),
-      ),
-        bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              width: 50,
-              height: 50,
-              child: IconButton(
-                icon: Image.asset('assets/inventory.png'),
-                onPressed: () {
-                  // Handle home button press
-                },
-              ),
-            ),
-            Container(
-              width: 60,
-              height: 60,
-              child: IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  // Handle search button press
-                },
-              ),
-            ),
-            Container(
-              width: 60,
-              height: 60,
-              child: IconButton(
-                icon: Icon(Icons.settings),
-                onPressed: () {
-                  // Handle settings button press
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Page 2',
+          ),
+          
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'settings',
+          ),
+          
+        ],
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black.withOpacity(0.5),
+      )
     );
   }
 }
