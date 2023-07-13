@@ -10,6 +10,8 @@ import 'dart:async';
 import 'package:demo/coinfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'customization.dart';
+
 class HomePage extends StatefulWidget {
   HomePage({super.key});
 
@@ -31,6 +33,7 @@ class _HomePageState extends State<HomePage> {
     home(),
     achievements(),
     settings(),
+    customization(),
   ];
 
   Future<int> fetchUserCoins() async {
@@ -125,6 +128,10 @@ class _HomePageState extends State<HomePage> {
             ),
             const BottomNavigationBarItem(
               icon: Icon(Icons.settings),
+              label: 'settings',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.auto_fix_high),
               label: 'settings',
             ),
           ],
