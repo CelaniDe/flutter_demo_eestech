@@ -18,11 +18,12 @@ class DatabaseService {
 }
 
 class Product {
+  String id;
   String name;
   DateTime expiryDate;
   bool selected;
 
-  Product(this.name, this.expiryDate, {this.selected = false});
+  Product(this.id, this.name, this.expiryDate, {this.selected = false});
 }
 
 class inventory extends StatefulWidget {
@@ -38,7 +39,6 @@ class _inventoryState extends State<inventory> {
   List<Product> productList = List.empty();
 
   String barcode = "";
-  
 
   @override
   void initState() {
@@ -69,7 +69,6 @@ class _inventoryState extends State<inventory> {
     }
   }
 
-
   Future<void> printProducts2() async {
     final user = FirebaseAuth.instance.currentUser;
     final userCollection = FirebaseFirestore.instance.collection('users');
@@ -80,47 +79,66 @@ class _inventoryState extends State<inventory> {
       final products = await userDoc.collection('products').get();
       List<Product> lista = [];
       print(products.docs.map((e) {
-        lista.add(Product(e.data()['name'], DateTime(2000)));
+        lista.add(Product(e.id, e.data()['name'], DateTime(2000)));
       }));
-    try {
+      try {
         setState(() {
           productList = lista;
         });
+      } catch (e) {
+        print(e);
       }
-    catch (e) {
-      print(e);
-    }
     }
   }
 
-    Future<void> addItem() async {
-      final user = FirebaseAuth.instance.currentUser;
-      final userCollection = FirebaseFirestore.instance.collection('users');
+  Future<void> addItem() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final userCollection = FirebaseFirestore.instance.collection('users');
 
-      if (user != null) {
-        final userDoc = userCollection.doc(user.uid);
-        final productCollection =
-            FirebaseFirestore.instance.collection('products');
-        final productDoc = productCollection.doc(barcode);
+    if (user != null) {
+      final userDoc = userCollection.doc(user.uid);
+      final productCollection =
+          FirebaseFirestore.instance.collection('products');
+      final productDoc = productCollection.doc(barcode);
 
-        final productSnapshot = await productDoc.get();
+      final productSnapshot = await productDoc.get();
 
-        if (productSnapshot.exists) {
-          final productData = productSnapshot.data();
+      if (productSnapshot.exists) {
+        final productData = productSnapshot.data();
 
-          // Add the product data to the user's product list
-          await userDoc.collection('products').doc(barcode).set(productData!);
-          printProducts2();
-        }
+        // Add the product data to the user's product list
+        await userDoc.collection('products').doc(barcode).set(productData!);
+        printProducts2();
       }
     }
+  }
 
-    Widget _addItem() {
-      return ElevatedButton(
-        onPressed: addItem,
-        child: Text('Scan Barcode'),
-      );
+  Future<void> deleteSelectedProducts() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final userCollection = FirebaseFirestore.instance.collection('users');
+
+    if (user != null) {
+      final userDoc = userCollection.doc(user.uid);
+      final productCollection = userDoc.collection('products');
+
+      final selectedProducts =
+          productList.where((product) => product.selected).toList();
+
+      for (final _product in selectedProducts) {
+        final productDoc = productCollection.doc(_product.id);
+        await productDoc.delete();
+      }
+
+      printProducts2();
     }
+  }
+
+  Widget _addItem() {
+    return ElevatedButton(
+      onPressed: addItem,
+      child: Text('Scan Barcode'),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,9 +166,9 @@ class _inventoryState extends State<inventory> {
             },
           ),
         ),
-        // ElevatedButton(
-        //     onPressed: printProducts2, child: const Text("click me please")),
-        // _addItem(),
+        ElevatedButton(
+            onPressed: deleteSelectedProducts,
+            child: const Text("Delete Products")),
         ElevatedButton(
           onPressed: scanBarcode,
           child: Text('Scan Barcode'),
