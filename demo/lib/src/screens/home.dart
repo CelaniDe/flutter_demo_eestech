@@ -82,15 +82,7 @@ class _homeState extends State<home> {
             textAlign: TextAlign.left,
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => Scanner()),
-            );
-          },
-          child: Text('Scan Barcode'),
-        ),
+
         Padding(
           padding: EdgeInsets.only(top: 20),
           child: SingleChildScrollView(

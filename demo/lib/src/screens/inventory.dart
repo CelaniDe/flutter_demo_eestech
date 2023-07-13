@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/auth.dart';
+import 'package:demo/src/screens/scanner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:barcode_scan2/barcode_scan2.dart' as scanner;
 
 class DatabaseService {
   // collection reference
@@ -34,24 +37,38 @@ class _inventoryState extends State<inventory> {
 
   List<Product> productList = List.empty();
 
+  String barcode = "";
+  
+
   @override
   void initState() {
     super.initState();
     printProducts2();
   }
 
-  Future<void> signOut() async {
-    await Auth().signOut();
+  Future<void> scanBarcode() async {
+    try {
+      final barcodeScanRes = await scanner.BarcodeScanner.scan();
+
+      // Do something with the scanned barcode value
+      print('Scanned barcode: ${barcodeScanRes.rawContent}');
+      setState(() {
+        barcode = barcodeScanRes.rawContent;
+      });
+      addItem();
+    } on PlatformException catch (e) {
+      if (e.code == scanner.BarcodeScanner.cameraAccessDenied) {
+        print('Camera permission denied');
+      } else {
+        print('Error: $e');
+      }
+    } on FormatException {
+      print('Scan cancelled');
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
-  Future<void> printProducts() async {
-    DatabaseService db = DatabaseService();
-
-    DocumentSnapshot documentSnapshot = await db.getData('celanide@gmail.com');
-    Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
-
-    print("Name: ${data['name']}");
-  }
 
   Future<void> printProducts2() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -79,7 +96,7 @@ class _inventoryState extends State<inventory> {
         final userDoc = userCollection.doc(user.uid);
         final productCollection =
             FirebaseFirestore.instance.collection('products');
-        final productDoc = productCollection.doc('555555555');
+        final productDoc = productCollection.doc(barcode);
 
         final productSnapshot = await productDoc.get();
 
@@ -87,9 +104,8 @@ class _inventoryState extends State<inventory> {
           final productData = productSnapshot.data();
 
           // Add the product data to the user's product list
-          final products = await userDoc.collection('products').get();
-          await userDoc.collection('products').add(productData!);
-          print(products.docs.map((e) => e.data()));
+          await userDoc.collection('products').doc(barcode).set(productData!);
+          printProducts2();
         }
       }
     }
@@ -127,9 +143,13 @@ class _inventoryState extends State<inventory> {
             },
           ),
         ),
+        // ElevatedButton(
+        //     onPressed: printProducts2, child: const Text("click me please")),
+        // _addItem(),
         ElevatedButton(
-            onPressed: printProducts2, child: const Text("click me please")),
-        _addItem(),
+          onPressed: scanBarcode,
+          child: Text('Scan Barcode'),
+        ),
       ],
     );
   }
