@@ -70,7 +70,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _title() {
-    return const Text('Firebase Auth');
+    return const Text(
+      'WasteNot',
+      style: TextStyle(color: Colors.black, fontSize: 30), // Set text color to black
+    );
   }
 
   Widget _userUid() {
@@ -85,9 +88,14 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             _title(),
             Spacer(),
-            CoinField(coinImagePath: 'assets/coin.png', coinCount: coinCount),
+            CoinField(
+              coinImagePath: 'assets/coin.png', 
+              coinCount: coinCount),
           ],
-        )),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        ),
         body: Container(
             height: double.infinity,
             width: double.infinity,
