@@ -2,12 +2,14 @@ import 'dart:js_util';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/auth.dart';
+import 'package:demo/main.dart';
 import 'package:demo/src/screens/scanner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:barcode_scan2/barcode_scan2.dart' as scanner;
+import 'package:provider/provider.dart';
 
 class DatabaseService {
   // collection reference
@@ -46,6 +48,34 @@ class _inventoryState extends State<inventory> {
   void initState() {
     super.initState();
     printProducts2();
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      final counter = Provider.of<Counter>(context, listen: false);
+      final firecoins = await fetchUserCoins();
+      counter.setCount(firecoins);
+      // counter.increment();
+    });
+  }
+
+  Future<int> fetchUserCoins() async {
+    int userCoins = 0;
+
+    if (user != null) {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+      print(user!.uid);
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic>? data =
+            documentSnapshot.data() as Map<String, dynamic>?;
+        if (data != null) {
+          userCoins = data['coins'] ?? 0;
+        }
+      }
+    }
+
+    return userCoins;
   }
 
   Future<void> scanBarcode() async {
@@ -115,7 +145,7 @@ class _inventoryState extends State<inventory> {
     }
   }
 
-  Future<void> deleteSelectedProducts() async {
+  Future<void> deleteSelectedProducts(BuildContext context) async {
     final user = FirebaseAuth.instance.currentUser;
     final userCollection = FirebaseFirestore.instance.collection('users');
 
@@ -133,6 +163,11 @@ class _inventoryState extends State<inventory> {
 
       printProducts2();
       giveReward();
+
+      // ignore: use_build_context_synchronously
+      final counter = Provider.of<Counter>(context, listen: false);
+      final firecoins = await fetchUserCoins();
+      counter.setCount(firecoins);
     }
   }
 
@@ -162,6 +197,7 @@ class _inventoryState extends State<inventory> {
 
   @override
   Widget build(BuildContext context) {
+    final counter = Provider.of<Counter>(context);
     return Column(
       children: [
         Container(
@@ -187,13 +223,14 @@ class _inventoryState extends State<inventory> {
           ),
         ),
         ElevatedButton(
-            onPressed: deleteSelectedProducts,
+            onPressed: () {
+              deleteSelectedProducts(context);
+            },
             child: const Text("Delete Products")),
         ElevatedButton(
           onPressed: scanBarcode,
           child: Text('Scan Barcode'),
         ),
-        // ElevatedButton(onPressed: giveReward, child: Text("click to reward"))
       ],
     );
   }
