@@ -72,7 +72,8 @@ class _customizationState extends State<customization> {
           .where('name', isEqualTo: newProduct.name)
           .get();
 
-      if (documentSnapshot == null) return false;
+      print(documentSnapshot.docs);
+      if (documentSnapshot.docs.isEmpty) return false;
       return true;
     }
     return false;
@@ -135,23 +136,33 @@ class _customizationState extends State<customization> {
                         CoinField(
                             coinImagePath: 'assets/coin.png',
                             coinCount: hat.price),
-                        hat.price > 10
-                            ? TextButton(
-                                child: const Text('BUY'),
-                                onPressed: () {
-                                  removePoints(hat.price);
-                                  addDigitalItem(
-                                      Product(hat.name, hat.price, hat.image));
-                                },
-                              )
-                            : TextButton(
-                                child: const Text('SELECT'),
-                                onPressed: () {
-                                  removePoints(hat.price);
-                                  addDigitalItem(
-                                      Product(hat.name, hat.price, hat.image));
-                                },
-                              ),
+                        FutureBuilder(
+                            future: hasBought(hat),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasData) {
+                                print(snapshot.data);
+                                if (snapshot.data as bool) {
+                                  return TextButton(
+                                    child: const Text('SELECT'),
+                                    onPressed: () {},
+                                  );
+                                } else {
+                                  return TextButton(
+                                    child: const Text('BUY'),
+                                    onPressed: () {
+                                      removePoints(hat.price);
+                                      addDigitalItem(Product(
+                                          hat.name, hat.price, hat.image));
+                                    },
+                                  );
+                                }
+                              } else {
+                                return Text("No data");
+                              }
+                            })
                         // Increase the space between cards
                       ],
                     ),
