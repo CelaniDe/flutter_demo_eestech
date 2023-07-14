@@ -79,6 +79,12 @@ class _customizationState extends State<customization> {
     return false;
   }
 
+  void refreshPage() {
+    setState(() {
+      hats = hats;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -156,6 +162,7 @@ class _customizationState extends State<customization> {
                                       removePoints(hat.price);
                                       addDigitalItem(Product(
                                           hat.name, hat.price, hat.image));
+                                      refreshPage();
                                     },
                                   );
                                 }
