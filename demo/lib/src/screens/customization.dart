@@ -1,3 +1,4 @@
+import 'package:demo/coinfield.dart';
 import 'package:flutter/material.dart';
 
 class customization extends StatefulWidget {
@@ -22,11 +23,23 @@ class _customizationState extends State<customization> {
         Padding(
             padding: EdgeInsets.only(top: 20, left: 100),
             child: Container(
-              color: Colors.lightBlue,
               child: Text(
-                'Welcome! My name is Maou and \ntogether we will learn about food waste',
+                'Items for Sal',
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            )),
+        Padding(
+            padding: EdgeInsets.only(top: 50, right: 300, bottom: 20),
+            child: Container(
+              child: Text(
+                'Hats',
+                style: TextStyle(
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -45,6 +58,7 @@ class _customizationState extends State<customization> {
                   children: <Widget>[
                     ListTile(
                       leading: Container(
+                        padding: EdgeInsets.only(top: 20),
                         width: 50,
                         height: 50,
                         child: Image.asset(
@@ -54,13 +68,15 @@ class _customizationState extends State<customization> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
+                        CoinField(
+                            coinImagePath: 'assets/coin.png', coinCount: 10),
                         TextButton(
                           child: const Text('BUY'),
                           onPressed: () {/* ... */},
                         ),
-                        const SizedBox(width: 8),
-                        const SizedBox(width: 8),
+                        // Increase the space between cards
                       ],
                     ),
                   ],
