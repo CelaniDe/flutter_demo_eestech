@@ -14,7 +14,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:demo/main.dart';
 
-
 var badgesFolder = 'assets/badges/';
 List<String> childrenData = [
   badgesFolder + '1.png',
@@ -231,18 +230,6 @@ class _homeState extends State<home> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Text(
-                    'Welcome to the Park',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
                 ElevatedButton(
                   onPressed: initializeNotifications,
                   child: Text('Show notification'),
@@ -264,7 +251,7 @@ class _homeState extends State<home> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       image: DecorationImage(
-                        image: Image.asset('assets/park.png').image,
+                        image: Image.asset('assets/bg.png').image,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -286,9 +273,17 @@ class _homeState extends State<home> {
                         width: 130,
                         height: 130,
                         decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
-                            image: Image.asset('assets/pou_img.png').image,
+                            image: AssetImage('assets/pou_img.png'),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -305,7 +300,7 @@ class _homeState extends State<home> {
                           child: Padding(
                               padding: EdgeInsets.all(10),
                               child: Text(
-                                'Welcome! My name is Maou and \ntogether we will learn about food waste',
+                                'Welcome! My name is Sal and \ntogether we will learn about food waste',
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
