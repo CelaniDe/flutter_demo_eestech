@@ -235,7 +235,7 @@ class _inventoryState extends State<inventory> {
                   child: Container(
                     width: 80,
                     height: 80,
-                    child: Image.asset('assets/trash.png'),
+                    child: Image.asset('assets/fork.png'),
                   )),
               GestureDetector(
                   onTap: () => scanBarcode(),
