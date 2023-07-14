@@ -9,7 +9,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
 import 'package:demo/coinfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
+import '../../main.dart';
 import 'customization.dart';
 
 class HomePage extends StatefulWidget {
@@ -68,14 +70,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Widget _coinCount() {
-    return Text('$coinCount');
-  }
-
   Widget _title() {
     return const Text(
       'WasteNot',
-      style: TextStyle(color: Colors.black, fontSize: 30), // Set text color to black
+      style: TextStyle(
+          color: Colors.black, fontSize: 30), // Set text color to black
     );
   }
 
@@ -85,19 +84,24 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final counter = Provider.of<Counter>(context);
     return Scaffold(
         appBar: AppBar(
-            title: Row(
-          children: <Widget>[
-            _title(),
-            Spacer(),
-            CoinField(
-              coinImagePath: 'assets/coin.png', 
-              coinCount: coinCount),
-          ],
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+          title: Row(
+            children: <Widget>[
+              _title(),
+              Spacer(),
+              CoinField(
+                  coinImagePath: 'assets/coin.png', coinCount: counter.count),
+              // Text(
+              //   'Count: ${counter.count}',
+              //   style: TextStyle(
+              //       fontSize: 20, color: Color.fromARGB(255, 66, 125, 145)),
+              // ),
+            ],
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
         body: Container(
             height: double.infinity,
