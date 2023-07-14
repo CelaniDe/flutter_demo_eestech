@@ -17,13 +17,13 @@ class CoinField extends StatelessWidget {
         children: <Widget>[
           Image.asset(
             coinImagePath,
-            width: 50,
-            height: 50,
+            width: 30,
+            height: 30,
           ),
           SizedBox(height: 10, width: 15),
           Text(
             '$coinCount',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ],
       ),

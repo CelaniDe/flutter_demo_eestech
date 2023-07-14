@@ -10,6 +10,8 @@ import 'dart:async';
 import 'package:demo/coinfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'customization.dart';
+
 class HomePage extends StatefulWidget {
   HomePage({super.key});
 
@@ -31,6 +33,7 @@ class _HomePageState extends State<HomePage> {
     home(),
     achievements(),
     settings(),
+    customization(),
   ];
 
   Future<int> fetchUserCoins() async {
@@ -70,7 +73,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _title() {
-    return const Text('Firebase Auth');
+    return const Text(
+      'WasteNot',
+      style: TextStyle(color: Colors.black, fontSize: 30), // Set text color to black
+    );
   }
 
   Widget _userUid() {
@@ -85,9 +91,14 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             _title(),
             Spacer(),
-            CoinField(coinImagePath: 'assets/coin.png', coinCount: coinCount),
+            CoinField(
+              coinImagePath: 'assets/coin.png', 
+              coinCount: coinCount),
           ],
-        )),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        ),
         body: Container(
             height: double.infinity,
             width: double.infinity,
@@ -113,18 +124,26 @@ class _HomePageState extends State<HomePage> {
                 height: 30,
                 child: Image.asset('assets/inventory.png'),
               ),
-              label: 'Page 1',
+              label: 'Inventory',
             ),
             const BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
             ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+            BottomNavigationBarItem(
+              icon: Container(
+                width: 30,
+                height: 30,
+                child: Image.asset('assets/award.png'),
+              ),
               label: 'Achievements',
             ),
             const BottomNavigationBarItem(
               icon: Icon(Icons.settings),
+              label: 'settings',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.auto_fix_high),
               label: 'settings',
             ),
           ],

@@ -89,78 +89,105 @@ class _homeState extends State<home> {
 
   @override
   Widget build(BuildContext context) {
+    var constraints;
+    final screenSize = MediaQuery.of(context).size;
     return Container(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 20),
-          child: Text(
-            'Welcome to the Park',
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-            textAlign: TextAlign.left,
-          ),
-        ),
+      height: screenSize.height- 200,
+      child: Stack(
 
-        ElevatedButton(
-          onPressed: incrementX,
-          child: Text('Complete task'),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 20),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: widgetList,
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 20),
-          child: Container(
-            width: 450,
-            height: 200,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: Image.asset('assets/park.png').image,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-        Padding(
-            padding: EdgeInsets.only(top: 20, left: 100),
-            child: Container(
-              color: Colors.lightBlue,
+      children: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 20),
               child: Text(
-                'Welcome! My name is Maou and \ntogether we will learn about food waste',
+                'Welcome to the Park',
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
-              ),
-            )),
-        Padding(
-          padding: EdgeInsets.only(top: 20),
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: Image.asset('assets/pou_img.png').image,
-                fit: BoxFit.cover,
+                textAlign: TextAlign.left,
               ),
             ),
-          ),
+            ElevatedButton(
+              onPressed: incrementX,
+              child: Text('Complete task'),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: widgetList,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: Container(
+                width: 450,
+                height: 400,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: Image.asset('assets/park.png').image,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
+        Positioned(
+            bottom: 20,
+            left: 0,
+            right: 0,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+
+                Padding(
+                  padding: EdgeInsets.only(top: 100),
+                  child: Container(
+                    width: 130,
+                    height: 130,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: Image.asset('assets/pou_img.png').image,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                    padding: EdgeInsets.only(top: 20, left: 10),
+                    child: Container(
+                      width: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.lightBlueAccent,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child:
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child:
+                        Text(
+                          'Welcome! My name is Maou and \ntogether we will learn about food waste',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        )
+                      ),
+                    )),
+              ],
+            )),
       ],
     ));
   }
