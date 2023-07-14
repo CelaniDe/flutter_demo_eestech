@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/auth.dart';
-import 'package:demo/src/screens/scanner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -103,11 +102,17 @@ class _inventoryState extends State<inventory> {
 
       final productSnapshot = await productDoc.get();
 
+      final Map<String, dynamic>? product = productSnapshot.data();
+
       if (productSnapshot.exists) {
-        final productData = productSnapshot.data();
+        final productData = {
+          'name': product?['name'],
+          'datetime': DateTime.now(),
+          // Add other fields as needed
+        };
 
         // Add the product data to the user's product list
-        await userDoc.collection('products').doc(barcode).set(productData!);
+        await userDoc.collection('products').doc(barcode).set(productData);
         printProducts2();
       }
     }
