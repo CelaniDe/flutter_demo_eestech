@@ -1,5 +1,3 @@
-import 'dart:js_util';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/auth.dart';
 import 'package:demo/src/screens/scanner.dart';
@@ -149,7 +147,7 @@ class _inventoryState extends State<inventory> {
     newDoc2['coins'] = (newDoc2['coins'] as int) + 1;
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(user!.uid)
+        .doc(user.uid)
         .set(newDoc2);
   }
 
@@ -186,13 +184,33 @@ class _inventoryState extends State<inventory> {
             },
           ),
         ),
-        ElevatedButton(
-            onPressed: deleteSelectedProducts,
-            child: const Text("Delete Products")),
-        ElevatedButton(
-          onPressed: scanBarcode,
-          child: Text('Scan Barcode'),
-        ),
+        Column(children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GestureDetector(
+                  onTap: () => scanBarcode(),
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    child: Image.asset('assets/trash.png'),
+                  )),
+              GestureDetector(
+                  onTap: () => scanBarcode(),
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    child: Image.asset('assets/barcode.png'),
+                  ))
+            ],
+          ),
+          Padding(
+              padding: EdgeInsets.only(top: 20),
+              child:
+                  ElevatedButton(onPressed: null, child: Text("Find a recipe")))
+        ]),
+
         // ElevatedButton(onPressed: giveReward, child: Text("click to reward"))
       ],
     );

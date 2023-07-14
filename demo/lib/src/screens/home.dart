@@ -60,7 +60,7 @@ class _homeState extends State<home> {
                 height: 50,
                 margin: EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(20),
                   image: DecorationImage(
                     image: AssetImage(assetPath),
                     fit: BoxFit.cover,
@@ -131,7 +131,7 @@ class _homeState extends State<home> {
                 width: 450,
                 height: 400,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(20),
                   image: DecorationImage(
                     image: Image.asset('assets/park.png').image,
                     fit: BoxFit.cover,

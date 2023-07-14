@@ -65,6 +65,8 @@ flutter:
     - assets/badges/
     - assets/pou_img.png
     - assets/award.png
+    - assets/barcode.png
+    - assets/trash.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
