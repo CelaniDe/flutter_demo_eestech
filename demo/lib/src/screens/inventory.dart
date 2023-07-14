@@ -1,3 +1,5 @@
+import 'dart:js_util';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/auth.dart';
 import 'package:demo/src/screens/scanner.dart';
@@ -130,7 +132,25 @@ class _inventoryState extends State<inventory> {
       }
 
       printProducts2();
+      giveReward();
     }
+  }
+
+  Future<void> giveReward() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final userCollection = FirebaseFirestore.instance.collection('users');
+    DocumentSnapshot currentUserSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .get();
+    Map<String, dynamic> newDoc = {"coins": 50};
+    Map<String, dynamic> newDoc2 =
+        currentUserSnapshot.data() as Map<String, dynamic>;
+    newDoc2['coins'] = (newDoc2['coins'] as int) + 1;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .set(newDoc2);
   }
 
   Widget _addItem() {
@@ -173,6 +193,7 @@ class _inventoryState extends State<inventory> {
           onPressed: scanBarcode,
           child: Text('Scan Barcode'),
         ),
+        // ElevatedButton(onPressed: giveReward, child: Text("click to reward"))
       ],
     );
   }
