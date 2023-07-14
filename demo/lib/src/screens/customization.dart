@@ -8,36 +8,68 @@ class customization extends StatefulWidget {
 }
 
 class _customizationState extends State<customization> {
+  List<String> hats = ['hat1', 'hat2', 'hat3', 'hat4'];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            const ListTile(
-              leading: Icon(Icons.album),
-              title: Text('The Enchanted Nightingale'),
-              subtitle: Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                TextButton(
-                  child: const Text('BUY TICKETS'),
-                  onPressed: () {/* ... */},
+    return Column(
+      children: [
+        Padding(
+            padding: EdgeInsets.only(top: 20, left: 100),
+            child: Container(
+              color: Colors.lightBlue,
+              child: Text(
+                'Welcome! My name is Maou and \ntogether we will learn about food waste',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
-                const SizedBox(width: 8),
-                TextButton(
-                  child: const Text('LISTEN'),
-                  onPressed: () {/* ... */},
+              ),
+            )),
+        Container(
+          height: 500,
+          child: ListView.builder(
+            itemCount: hats.length,
+            itemBuilder: (context, index) {
+              final hat = hats[index];
+
+              return Card(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      leading: Container(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset(
+                            'assets/hats/hat1.png'), // Replace with your image path
+                      ),
+                      title: Text(hat),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        TextButton(
+                          child: const Text('BUY'),
+                          onPressed: () {/* ... */},
+                        ),
+                        const SizedBox(width: 8),
+                        const SizedBox(width: 8),
+                      ],
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-              ],
-            ),
-          ],
+              );
+            },
+          ),
         ),
-      ),
+      ],
     );
   }
 }

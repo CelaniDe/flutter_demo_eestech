@@ -129,16 +129,26 @@ class _achievementsState extends State<achievements> {
           Padding(
               padding: EdgeInsets.only(top: 100, left: 100),
               child: Container(
-                color: Colors.lightBlue,
-                child: Text(
-                  'Here you can see all your accomplished tasks!',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.lightBlueAccent,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              )),
+                child:
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child:
+                  Text(
+                    'Welcome! My name is Maou and \ntogether we will learn about food waste',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  )
+                ),
+              )
+          ),
           Padding(
             padding: EdgeInsets.only(top: 20, left: 200),
             child: Container(
