@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +11,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:demo/main.dart';
+
 
 var badgesFolder = 'assets/badges/';
 List<String> childrenData = [
@@ -66,6 +70,12 @@ class _homeState extends State<home> {
         coins = userCoins;
         updateToolTipText();
       });
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final counter = Provider.of<Counter>(context, listen: false);
+      final firecoins = await fetchUserCoins();
+      counter.setCount(firecoins);
+      // counter.increment();
     });
   }
 

@@ -28,14 +28,14 @@ class _HomePageState extends State<HomePage> {
   final DatabaseReference coinsRef =
       FirebaseDatabase.instance.reference().child('coins');
 
-  var _currentIndex = 0;
+  var _currentIndex = 1;
 
   final List<Widget> _pages = [
     inventory(),
     home(),
     achievements(),
-    settings(),
     customization(),
+    settings(),
   ];
 
   Future<int> fetchUserCoins() async {
@@ -68,6 +68,7 @@ class _HomePageState extends State<HomePage> {
         coinCount = userCoins;
       });
     });
+
   }
 
   Widget _title() {
@@ -143,13 +144,14 @@ class _HomePageState extends State<HomePage> {
               label: 'Achievements',
             ),
             const BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'settings',
-            ),
-            const BottomNavigationBarItem(
               icon: Icon(Icons.auto_fix_high),
               label: 'settings',
             ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'settings',
+            ),
+
           ],
           selectedItemColor: Colors.black,
           unselectedItemColor: Colors.black.withOpacity(0.5),
