@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demo/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,14 +28,45 @@ class home extends StatefulWidget {
 
 class _homeState extends State<home> {
   final User? user = Auth().currentUSer;
-  int currentProgress = 0;
+
+  int coins = 0;
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  Future<int> fetchUserCoins() async {
+    int userCoins = 0;
+
+    if (user != null) {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+      print(user!.uid);
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic>? data =
+            documentSnapshot.data() as Map<String, dynamic>?;
+        if (data != null) {
+          userCoins = data['coins'] ?? 0;
+        }
+      }
+    }
+
+    return userCoins;
+  }
+
+  @override
   void initState() {
     super.initState();
-    updateToolTipText();
+
+    fetchUserCoins().then((userCoins) {
+      setState(() {
+        print(userCoins);
+        coins = userCoins;
+        updateToolTipText();
+      });
+    });
   }
 
   Future<void> signOut() async {
@@ -67,7 +100,6 @@ class _homeState extends State<home> {
   }
 
   Future<void> requestNotificationPermission() async {
-
     requestPermission();
     var settings =
         await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
@@ -111,14 +143,52 @@ class _homeState extends State<home> {
         .asMap()
         .map((index, assetPath) {
           final imageName = assetPath.split('/').last.replaceAll('.png', '');
-          String tooltipMessage =
-              'You need ${(startingValue + (index * 5)) - currentProgress} tasks to earn that badge!';
-
-          return MapEntry(
-            index,
-            Tooltip(
-              message: tooltipMessage,
-              child: Container(
+          if ((startingValue + (index * 5)) - coins > 0) {
+            String tooltipMessage =
+                'You need ${(startingValue + (index * 5)) - coins} tasks to earn that badge!';
+            return MapEntry(
+              index,
+              Tooltip(
+                message: tooltipMessage,
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  margin: EdgeInsets.symmetric(horizontal: 8),
+                  child: ColorFiltered(
+                    colorFilter: const ColorFilter.matrix([
+                      0.2126,
+                      0.7152,
+                      0.0722,
+                      0,
+                      0,
+                      0.2126,
+                      0.7152,
+                      0.0722,
+                      0,
+                      0,
+                      0.2126,
+                      0.7152,
+                      0.0722,
+                      0,
+                      0,
+                      0,
+                      0,
+                      0,
+                      1,
+                      0,
+                    ]),
+                    child: Image.asset(
+                      assetPath,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          } else {
+            return MapEntry(
+              index,
+              Container(
                 width: 50,
                 height: 50,
                 margin: EdgeInsets.symmetric(horizontal: 8),
@@ -130,23 +200,15 @@ class _homeState extends State<home> {
                   ),
                 ),
               ),
-            ),
-          );
+            );
+          }
         })
         .values
         .toList();
   }
 
-  void incrementX() {
-    setState(() {
-      currentProgress++;
-      updateToolTipText();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-
     final screenSize = MediaQuery.of(context).size;
     return Container(
         height: screenSize.height - 200,
@@ -167,10 +229,6 @@ class _homeState extends State<home> {
                     ),
                     textAlign: TextAlign.left,
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: incrementX,
-                  child: Text('Complete task'),
                 ),
                 ElevatedButton(
                   onPressed: initializeNotifications,
