@@ -21,6 +21,9 @@ List<String> childrenData = [
   badgesFolder + '2.png',
   badgesFolder + '3.png',
   badgesFolder + '4.png',
+  badgesFolder + '5.png',
+  badgesFolder + '6.png',
+  badgesFolder + '7.png',
 ];
 
 class home extends StatefulWidget {
@@ -137,8 +140,8 @@ class _homeState extends State<home> {
 
     await flutterLocalNotificationsPlugin.show(
       0,
-      'Notification Title',
-      'Notification Body',
+      'Reminder',
+      'Some Product(s) are about to expire!',
       platformChannelSpecifics,
       payload: 'notification_payload',
     );
